@@ -15,29 +15,36 @@
 import pygame
 import random
 import time
-
-winfill = (0, 0, 0)
+# Pygame Paramaters #
+bg = pygame.image.load("./Resources/Assets/feild.png")
+#winfill = pygame.image.load("./Resources/Assets/field.png")
 image = pygame.Surface((32, 32))
 image.fill((255, 255, 100))
-cImage = pygame.Surface((32, 32))
-cImage.fill((100, 190, 100))
-###START HERE###
-pygame.init()
-#window where the game occurs
-winSize = winx, winy = 400, 400
-window = pygame.display.set_mode((winSize))
 
+pygame.init()
+
+###START HERE###
+
+#window where the game occurs
+winSize = winx, winy = 480, 480
+window = pygame.display.set_mode((winSize))
+tractor = pygame.image.load("./Resources/Assets/Tractor.png")
+hay = pygame.image.load("./Resources/Assets/hay.png")
 # CASH MANAGMENT #
 loanSize = random.random()
 cash = 0.00
-interestRate = 0.00
-dlc = 0
+playArea = pygame.Rect((0, 0), (winSize))
 collect = pygame.Rect(
     (random.randint(32, (winx - 32)), random.randint(32,
                                                      (winx - 32))), (32, 32))
 rect = pygame.Rect((0, 0), (32, 32))
 isLoan = False
 collection = 0
+interestRate = 0.00
+cursor
+# GAME PROGRESS #
+
+dlc = 0
 
 
 #loans
@@ -60,11 +67,20 @@ def interest():
 
 
 def posColl():
-    global collection
-    collect.left = random.randint(0, (winx - 32))
-    collect.top = random.randint(0, (winy - 32))
-    collection += 1
-
+	global collection
+	collect.left = random.randint(0, (winx - 32))
+	collect.top = random.randint(0, (winy - 32))
+	collection += 1
+	if collect.top > winy - collect.height:
+	    collect.top = winy - collect.height
+	if collect.top < 0:
+	    collect.top = 0
+	if collect.left > winx - collect.width:
+	    collect.left = winx - collect.width
+	if collect.left < 0:
+	    collect.left = 0 
+	print(collect.top)
+	print(collect.left)	
 
 def moveXY(xDirect, yDirect):
     for x in range(0, 10):
@@ -85,41 +101,84 @@ def payment(pay):
     cash += pay
 
 
-def moveBlock():
+def jobZero():
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_w:
-                moveXY(0, -1)
+                moveXY(0, -3)
             elif event.key == pygame.K_s:
-                moveXY(0, 1)
+                moveXY(0, 3)
             elif event.key == pygame.K_a:
-                moveXY(-1, 0)
+                moveXY(-3, 0)
             elif event.key == pygame.K_d:
-                moveXY(1, 0)
+                moveXY(3, 0)
         if rect.colliderect(collect):
             posColl()
             print(collection)
         if collection > 9:
             break
 
-        window.fill(winfill)
-        window.blit(image, rect)
-        window.blit(cImage, collect)
+        window.blit(bg, playArea)
+        window.blit(tractor, rect)
+        window.blit(hay, collect)
 
 
 def jobOne():
     collection = 0
-    moveBlock()
+    jobZero()
     payment(10)
+
+
+def drawCirc(a):
+    pressed = pygame.key.get_pressed()
+    
+    if pressed[pygame.K_UP]:
+        pygame.draw.circle(20, 220, 15+a,30,30,30)
+        a +=1
+    if pressed[pygame.K_DOWN]:
+        a -=1
+    window.blit(bg, playArea)
+    window.blit(tractor, rect)
+    window.blit(hay, collect)
+
+
+def jobTwo():
+	moves = 0
+	drawCirc(moves)	
+	if moves > 9:
+		payment(5)
+	else:
+	    jobTwo()
+	if moves < 0:
+	    print("You have failed at this job, try another one")
+	    return False
+
+
+def jobThree():
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                moveXY(0, -3)
+            elif event.key == pygame.K_RIGHT:
+                moveXY(0, 3)
+        if rect.colliderect(collect):
+            posColl()
+            print(collection)
+        if collection > 9:
+            break
+
+        window.blit(bg, playArea)
+        window.blit(tractor, rect)
+        window.blit(hay, collect)
 
 
 def workJob():
     interest()
     job = 0  #random.randint(0, 5)
     if job == 0:
-        moveBlock()
-    elif job == 1:
+        jobZero()
+    elif job == 1: 
         pass
     elif job == 2:
         pass
@@ -140,6 +199,10 @@ def buyGame():
     else:
         #run next funtion
         pass
+def menu():
+	pass
+def getMouseCollision():
+	for event in pygame.event.get():
 
 
 #loops through the game
