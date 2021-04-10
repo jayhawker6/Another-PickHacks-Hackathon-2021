@@ -24,8 +24,10 @@ image.fill((255, 255, 100))
 pygame.init()
 
 ###START HERE###
-prompt = pygame.Rect((0,0), (0,0))
+promptBack = pygame.Rect((0, 0), (0, 0))
 prompt = pygame.image.load("./Resources/Assets/Tractor.png")
+prompt1 = pygame.image.load("./Resources/Buttons/p3.png")
+promptButton = pygame.Rect((0,0), (0,0))
 #window where the game occurs
 winSize = winx, winy = 640, 480
 window = pygame.display.set_mode((winSize))
@@ -43,9 +45,9 @@ isLoan = False
 collection = 0
 interestRate = 0.00
 selected = 0
-prompt = pygame.Rect((0, 0), (64, 32))
+promptBack = pygame.Rect((0, 0), (64, 32))
 # GAME PROGRESS #
- 
+
 img1 = pygame.image.load("./Resources/Buttons/b1.png")
 img2 = pygame.image.load("./Resources/Buttons/b3.png")
 dlc = 0
@@ -100,6 +102,7 @@ def moveXY(xDirect, yDirect):
     if rect.left < 0:
         rect.left = 0
 
+
 '''
 def moveCollect(xDir, yDir):
     for x in range(0, 10):
@@ -115,6 +118,8 @@ def moveCollect(xDir, yDir):
         collect.left = 0
 
 '''
+
+
 def payment(pay):
     global cash
     cash += pay
@@ -169,10 +174,11 @@ def jobTwo():
         payment(5)
     else:
         jobTwo()
-        
+
     if moves < 0:
         print("You have failed at this job, try another one")
         return False
+
 
 ''''
 
@@ -229,6 +235,11 @@ def jobFour():
             col +=1
         else:
             col -=1
+
+		if col > 15:
+			break
+			print("You have failed to complete this job")
+		
     pay(10)    
     window.blit(bg, playArea)
     window.blit(tractor, rect)
@@ -291,44 +302,48 @@ def buyGame():
     else:
         #run next funtion
         pass
-def promptSize(width, height, path):
-	global prompt, prompt
-	pos = ((285-(width/2)), (160-(height)))
-	prompt = pygame.image.load(path)
-	prompt = pygame.Rect(pos, ((width,height)))
-	
+
+
+def promptSize(width, height):
+    global prompt, promptBack, prompt1, promptButton
+    pos = ((285 - (width / 2)), (160 - (height / 2)))
+    posB = ((285-(78 / 2)), (160-(height - 40) / 2) + )
+    prompt = pygame.image.load("./Resources/Buttons/p3.png")
+    promptBack = pygame.Rect(pos, ((width, height)))
+    prompt1 = pygame.image.load("./Resources/Buttons/p2.png")
+    promptButton = pygame.Rect((posB), ((width, height)))
+
 
 def menu():
-	global prompt, prompt
+	global prompt, promptBack, prompt1, promptButton 
 	gameWin = pygame.Rect((0, 0), (569, 320))
 	if dlc < 1:
-		promptSize(128, 64, "./Resources/Buttons/p3.png")
-
-	    #prompt 1
+	    promptSize(128, 64)	
+	#prompt 1
 	elif dlc < 2:
 	    promptSize(2, 2, "./Resources/Buttons/p2.png")
-		#prompt 2
+	#prompt 2
 	elif dlc < 3:
 	    promptSize(2, 2, "./Resources/Buttons/p3.png")
-		#prompt 3
+	#prompt 3
 	elif dlc < 4:
 	    promptSize(2, 2, "./Resources/Buttons/p4.png")
-		#prompt 4
+	#prompt 4
 	elif dlc < 5:
-		promptSize(2, 2, "./Resources/Buttons/p5.png")
+	    promptSize(2, 2, "./Resources/Buttons/p5.png")
 	else:
-		#execute 'Main Game' code here
-		pass
-	button1 = pygame.Rect(((winx-66),20), (62, 20))
-
-	button2 = pygame.Rect(((winx-50),50), (46, 20))
+	    #execute 'Main Game' code here
+	    pass
+	button1 = pygame.Rect(((winx - 66), 20), (62, 20))	
+	button2 = pygame.Rect(((winx - 50), 50), (46, 20))
 	window.blit(image, gameWin)
-	window.blit(prompt, prompt)
+	window.blit(prompt, promptBack)
+	window.blit(prompt1, promptButton)
 	window.blit(img1, button1)
 	window.blit(img2, button2)
-	
-#prompt 5
 
+
+#prompt 5
 
 
 def selection():
@@ -345,7 +360,7 @@ def selection():
 
 #loops through the game
 while True:
-	menu()
+    menu()
     #workJob()
     #buyGame()
-	pygame.display.update()
+    pygame.display.update()

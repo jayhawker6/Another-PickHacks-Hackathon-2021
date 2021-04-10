@@ -2,6 +2,6 @@
 ## Motto:
 ***"It's not a bug, It's a feature."***
 ## Credits:
-Andrew Guernsey (@jayhawker6) - Art, Error Prevention, Indent Slave, Math, Developer
-Nathan Allen Bear (@charcoal99) - Indentation Failure, Art, Developer
-Nestor Fong (@nerdyF) - Another Indentation Failure, Developer
+- Andrew Guernsey (@jayhawker6) - Art, Error Prevention, Indent Slave, Math, Developer
+- Nathan Allen Bear (@charcoal99) - Indentation Failure, Art, Developer
+- Nestor Fong (@nerdyF) - Another Indentation Failure, Developer
