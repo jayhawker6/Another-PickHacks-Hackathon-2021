@@ -10,7 +10,7 @@ while 1:
   pygame.draw.rect(window,(255, 255, 100),((x - 100),(y - 100),(x + 25),(y+25)))
 
   if left:
-    x = y
     
+
   pygame.display.update()
 
