@@ -16,17 +16,18 @@ import pygame
 import random
 import time
 # Pygame Paramaters #
-bg = pygame.image.load("./Resources/Assets/feild.png")
-#winfill = pygame.image.load("./Resources/Assets/field.png")
-image = pygame.Surface((32, 32))
+bg = pygame.image.load("./Resources/Assets/field.png")
+winfill = pygame.image.load("./Resources/Assets/field.png")
+image = pygame.Surface((569, 320))
 image.fill((255, 255, 100))
 
 pygame.init()
 
 ###START HERE###
-
+prompt = pygame.Rect((0,0), (0,0))
+prompt = pygame.image.load("./Resources/Assets/Tractor.png")
 #window where the game occurs
-winSize = winx, winy = 480, 480
+winSize = winx, winy = 640, 480
 window = pygame.display.set_mode((winSize))
 tractor = pygame.image.load("./Resources/Assets/Tractor.png")
 hay = pygame.image.load("./Resources/Assets/hay.png")
@@ -41,9 +42,12 @@ rect = pygame.Rect((0, 0), (32, 32))
 isLoan = False
 collection = 0
 interestRate = 0.00
-cursor
+selected = 0
+prompt = pygame.Rect((0, 0), (64, 32))
 # GAME PROGRESS #
-
+ 
+img1 = pygame.image.load("./Resources/Buttons/b1.png")
+img2 = pygame.image.load("./Resources/Buttons/b3.png")
 dlc = 0
 
 
@@ -67,20 +71,21 @@ def interest():
 
 
 def posColl():
-	global collection
-	collect.left = random.randint(0, (winx - 32))
-	collect.top = random.randint(0, (winy - 32))
-	collection += 1
-	if collect.top > winy - collect.height:
-	    collect.top = winy - collect.height
-	if collect.top < 0:
-	    collect.top = 0
-	if collect.left > winx - collect.width:
-	    collect.left = winx - collect.width
-	if collect.left < 0:
-	    collect.left = 0 
-	print(collect.top)
-	print(collect.left)	
+    global collection
+    collect.left = random.randint(0, (winx - 32))
+    collect.top = random.randint(0, (winy - 32))
+    collection += 1
+    if collect.top > winy - collect.height:
+        collect.top = winy - collect.height
+    if collect.top < 0:
+        collect.top = 0
+    if collect.left > winx - collect.width:
+        collect.left = winx - collect.width
+    if collect.left < 0:
+        collect.left = 0
+    print(collect.top)
+    print(collect.left)
+
 
 def moveXY(xDirect, yDirect):
     for x in range(0, 10):
@@ -95,7 +100,21 @@ def moveXY(xDirect, yDirect):
     if rect.left < 0:
         rect.left = 0
 
+'''
+def moveCollect(xDir, yDir):
+    for x in range(0, 10):
+        collect.move_ip(xDir, yDir)
+        pygame.time.wait(1)
+    if collect.top > winy - rect.height:
+        collect.top = winy - rect.height
+    if collect.top < 0:
+        collect.top = 0
+    if collect.left > winx - rect.width:
+        collect.left = winx - rect.width
+    if collect.left < 0:
+        collect.left = 0
 
+'''
 def payment(pay):
     global cash
     cash += pay
@@ -132,45 +151,118 @@ def jobOne():
 
 def drawCirc(a):
     pressed = pygame.key.get_pressed()
-    
+
     if pressed[pygame.K_UP]:
-        pygame.draw.circle(20, 220, 15+a,30,30,30)
-        a +=1
+        pygame.draw.circle(20, 220, 15 + a, 30, 30, 30)
+        a += 1
     if pressed[pygame.K_DOWN]:
-        a -=1
+        a -= 1
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
 
 
 def jobTwo():
-	moves = 0
-	drawCirc(moves)	
-	if moves > 9:
-		payment(5)
-	else:
-	    jobTwo()
-	if moves < 0:
-	    print("You have failed at this job, try another one")
-	    return False
+    moves = 0
+    drawCirc(moves)
+    if moves > 9:
+        payment(5)
+    else:
+        jobTwo()
+        
+    if moves < 0:
+        print("You have failed at this job, try another one")
+        return False
 
+''''
 
 def jobThree():
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                moveXY(0, -3)
-            elif event.key == pygame.K_RIGHT:
-                moveXY(0, 3)
-        if rect.colliderect(collect):
-            posColl()
-            print(collection)
-        if collection > 9:
-            break
+    col = 0
+    x, y = 0,0
+    pressed = pygame.key.get_pressed()
+    
+    while col > 9:
+        moveXY(x,y)
+        x +=cursor.top
+        y +=cursor.bottom
 
-        window.blit(bg, playArea)
-        window.blit(tractor, rect)
-        window.blit(hay, collect)
+        if pressed[pygame.K_UP]:
+            moveCollect(0,3)
+        if pressed[pygame.K_DOWN]:
+            moveCollect(0,-3)
+        if pressed[pygame.K_LEFT]:
+            moveCollect(-3,0)
+        if pressed[pygame.K_RIGHT]:
+            moveCollect(3,0)
+
+        if rect.colliderect(collect):
+            postColl()
+            col +=1
+
+    pay(5)    
+    window.blit(bg, playArea)
+    window.blit(tractor, rect)
+    window.blit(hay, collect)
+
+
+def jobFour():
+    col = 9
+    x, y = 0,0
+    pressed = pygame.key.get_pressed()
+    
+    while col < 2:
+        moveXY(x,y)
+        x +=cursor.top
+        y +=cursor.bottom
+
+        if pressed[pygame.K_UP]:
+            moveCollect(0,3)
+        if pressed[pygame.K_DOWN]:
+            moveCollect(0,-3)
+        if pressed[pygame.K_LEFT]:
+            moveCollect(-3,0)
+        if pressed[pygame.K_RIGHT]:
+            moveCollect(3,0)
+
+        if rect.colliderect(collect):
+            postColl()
+            col +=1
+        else:
+            col -=1
+    pay(10)    
+    window.blit(bg, playArea)
+    window.blit(tractor, rect)
+    window.blit(hay, collect)
+
+def jobFive():
+    col = 0
+    x, y = 0,0
+    pressed = pygame.key.get_pressed()
+    
+    while col < 9:
+        moveXY(x,y)
+        x +=cursor.top
+        y +=cursor.bottom
+
+        if pressed[pygame.K_UP]:
+            moveCollect(0,3)
+        if pressed[pygame.K_DOWN]:
+            moveCollect(0,-3)
+        if pressed[pygame.K_LEFT]:
+            moveCollect(-3,0)
+        if pressed[pygame.K_RIGHT]:
+            moveCollect(3,0)
+
+        if rect.colliderect(collect):
+            postColl()
+            col +=1
+
+    pay(10)    
+    window.blit(bg, playArea)
+    window.blit(tractor, rect)
+    window.blit(hay, collect)
+
+'''
 
 
 def workJob():
@@ -178,7 +270,7 @@ def workJob():
     job = 0  #random.randint(0, 5)
     if job == 0:
         jobZero()
-    elif job == 1: 
+    elif job == 1:
         pass
     elif job == 2:
         pass
@@ -199,14 +291,61 @@ def buyGame():
     else:
         #run next funtion
         pass
+def promptSize(width, height, path):
+	global prompt, prompt
+	pos = ((285-(width/2)), (160-(height)))
+	prompt = pygame.image.load(path)
+	prompt = pygame.Rect(pos, ((width,height)))
+	
+
 def menu():
-	pass
-def getMouseCollision():
-	for event in pygame.event.get():
+	global prompt, prompt
+	gameWin = pygame.Rect((0, 0), (569, 320))
+	if dlc < 1:
+		promptSize(128, 64, "./Resources/Buttons/p3.png")
+
+	    #prompt 1
+	elif dlc < 2:
+	    promptSize(2, 2, "./Resources/Buttons/p2.png")
+		#prompt 2
+	elif dlc < 3:
+	    promptSize(2, 2, "./Resources/Buttons/p3.png")
+		#prompt 3
+	elif dlc < 4:
+	    promptSize(2, 2, "./Resources/Buttons/p4.png")
+		#prompt 4
+	elif dlc < 5:
+		promptSize(2, 2, "./Resources/Buttons/p5.png")
+	else:
+		#execute 'Main Game' code here
+		pass
+	button1 = pygame.Rect(((winx-66),20), (62, 20))
+
+	button2 = pygame.Rect(((winx-50),50), (46, 20))
+	window.blit(image, gameWin)
+	window.blit(prompt, prompt)
+	window.blit(img1, button1)
+	window.blit(img2, button2)
+	
+#prompt 5
+
+
+
+def selection():
+    global selected
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                if selected > 0:
+                    selected -= 1
+            elif event.key == pygame.K_d:
+                if selected < 2:
+                    selected += 1
 
 
 #loops through the game
 while True:
-    workJob()
+	menu()
+    #workJob()
     #buyGame()
-    pygame.display.update()
+	pygame.display.update()
