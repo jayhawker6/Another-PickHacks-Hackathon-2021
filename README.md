@@ -1,3 +1,6 @@
 # Anther-PickHacks-Hackathon-2021
-In the name!
-Missed it? Look up.
+## Motto:
+***"It's not a bug, It's a feature."***
+## Credits:
+Andrew Guernsey (@jayhawker6) - Art, Error Prevention, Indent Slave, Developer
+Nathan Allen Bear (@charcoal99)

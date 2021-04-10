@@ -1,16 +1,50 @@
 [[package]]
 category = "main"
+description = "A minimalist datetime library for Python"
+name = "clock"
+optional = false
+python-versions = "*"
+version = "0.1"
+
+[package.dependencies]
+pytz = ">=0a"
+tzlocal = ">=1.1.1"
+
+[[package]]
+category = "main"
 description = "Python Game Development"
 name = "pygame"
 optional = false
 python-versions = "*"
 version = "2.0.1"
 
+[[package]]
+category = "main"
+description = "World timezone definitions, modern and historical"
+name = "pytz"
+optional = false
+python-versions = "*"
+version = "2021.1"
+
+[[package]]
+category = "main"
+description = "tzinfo object for the local timezone"
+name = "tzlocal"
+optional = false
+python-versions = "*"
+version = "2.1"
+
+[package.dependencies]
+pytz = "*"
+
 [metadata]
-content-hash = "27309c8853b0cdee3cfb092c49c2414523175407363ab871fdf780177f39f616"
+content-hash = "345a9df5e8680545ffd139b060d7d6d3b1bd47466a5074f7fb6a6727391fc380"
 python-versions = "^3.8"
 
 [metadata.files]
+clock = [
+    {file = "clock-0.1.tar.gz", hash = "sha256:9a3104d08e9928c9e6149aa85dea6a3cb1bb35c7333c5f6305ab6a0b0046f211"},
+]
 pygame = [
     {file = "pygame-2.0.1-cp27-cp27m-macosx_10_9_intel.whl", hash = "sha256:49c2f58559c1fbf4ba258e4b141578ccb0e83da3d4f823894f6171a8f0d594ed"},
     {file = "pygame-2.0.1-cp27-cp27m-win32.whl", hash = "sha256:0571dde0277483f5060c8ee43cbfd8df5776b12505e3948eee241c8ce9b93371"},
@@ -53,4 +87,12 @@ pygame = [
     {file = "pygame-2.0.1-pp37-pypy37_pp73-manylinux2010_i686.whl", hash = "sha256:a4e35d89b6754941e82df1ce980a1c370943d3c076938d94ed1e48165dd6a11b"},
     {file = "pygame-2.0.1-pp37-pypy37_pp73-manylinux2010_x86_64.whl", hash = "sha256:b812285d23b5644c643a6ae30553a772f935f47f61826660b108b8727936384b"},
     {file = "pygame-2.0.1.tar.gz", hash = "sha256:8b1e7b63f47aafcdd8849933b206778747ef1802bd3d526aca45ed77141e4001"},
+]
+pytz = [
+    {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},
+    {file = "pytz-2021.1.tar.gz", hash = "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da"},
+]
+tzlocal = [
+    {file = "tzlocal-2.1-py2.py3-none-any.whl", hash = "sha256:e2cb6c6b5b604af38597403e9852872d7f534962ae2954c7f35efcb1ccacf4a4"},
+    {file = "tzlocal-2.1.tar.gz", hash = "sha256:643c97c5294aedc737780a49d9df30889321cbe1204eac2c2ec6134035a92e44"},
 ]
