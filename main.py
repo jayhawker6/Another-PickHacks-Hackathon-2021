@@ -39,7 +39,7 @@ tractor = pygame.image.load("./Resources/Assets/Tractor.png")
 hay = pygame.image.load("./Resources/Assets/hay.png")
 # CASH MANAGMENT #
 loanS = 0
-cash = 0.00
+cash = 1000000000.00
 playArea = pygame.Rect((0, 0), (winSize))
 collect = pygame.Rect(
     (random.randint(32, (480 - 32)), random.randint(32, (480 - 32))), (32, 32))
@@ -69,14 +69,16 @@ curse = pygame.Rect((0, 0), (1, 1))
 job = 0
 showPrompt = False
 
+
 #ball_game_area = pygame.Rect(())
 def iDontEvenKnowAnyMore():
     window.fill((0, 0, 0))
     gameWin = pygame.Rect((0, 0), (569, 320))
     button1 = pygame.Rect(((winx - 66), 20), (62, 20))
     button2 = pygame.Rect(((winx - 50), 50), (46, 20))
-    netWorth = myfont.render("""Balance: $%s, Debt: $%s""" % (cash, loanS), 1,
-                             (255, 255, 0))
+    netWorth = myfont.render(
+        """Balance: $%s, Debt: $%s, DLC: #%s %s""" % (cash, loanS, dlc, showPrompt), 1,
+        (255, 255, 0))
     window.blit(image, gameWin)
     window.blit(img1, button1)
     window.blit(img2, button2)
@@ -84,48 +86,51 @@ def iDontEvenKnowAnyMore():
 
 
 def startButton():
+    global button3
     pos = ((285 - (64 / 2)), (160 - (20 / 2)))
     button3 = pygame.Rect(pos, (62, 20))
     window.blit(img3, button3)
 
 
 def menu():
-	global prompt, promptBack, prompt1, promptButton, button1, button2, job
-	if isJob:
-		job = 0  #random.randint(0, 5)
-		workJob()
-	elif cantGiveCredit:
-		pos = ((285 - (64 / 2)), (160 - (64 / 2)))
-		prompt = pygame.image.load("./Resources/Buttons/p4.png")
-		promptBack = pygame.Rect(pos, ((64, 64)))
-		promptButton.y = -420
-		iDontEvenKnowAnyMore()
-		window.blit(prompt, promptBack)
-	elif dlc < 1:
-		iDontEvenKnowAnyMore()
-		promptSize(128, 64)
-    #prompt 1
-	elif dlc < 2:
-		iDontEvenKnowAnyMore()
-		startButton()
-		if showPrompt:
-			promptSize(128, 64)
-    #prompt 2
-	elif dlc < 3:
-		iDontEvenKnowAnyMore()
-		startButton()
+    global prompt, promptBack, prompt1, promptButton, button1, button2, job
+    if isJob:
+        job = 0  #random.randint(0, 5)
+        workJob()
+    elif cantGiveCredit:
+        pos = ((285 - (64 / 2)), (160 - (64 / 2)))
+        prompt = pygame.image.load("./Resources/Buttons/p4.png")
+        promptBack = pygame.Rect(pos, ((64, 64)))
+        promptButton.y = -420
+        iDontEvenKnowAnyMore()
+        window.blit(prompt, promptBack)
+    elif dlc < 1:
+        iDontEvenKnowAnyMore()
+        promptSize(128, 64)
+#prompt 1
+    elif dlc < 2:
+        iDontEvenKnowAnyMore()
+        startButton()
+        if showPrompt:
+            promptSize(128, 64)
+#prompt 2
+    elif dlc < 3:
+        iDontEvenKnowAnyMore()
+        startButton()
 
-    #prompt 3
-	elif dlc < 4:
-		promptSize(128, 64)
-		iDontEvenKnowAnyMore()
-    #prompt 4
-	elif dlc < 5:
-		promptSize(128, 64)
-		iDontEvenKnowAnyMore()
-	else:
-		#execute 'Main Game' code here
-		pass
+#prompt 3
+    elif dlc < 4:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+
+
+#prompt 4
+    elif dlc < 5:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+    else:
+        #execute 'Main Game' code here
+        pass
 
 
 def morshu():
@@ -134,7 +139,7 @@ def morshu():
 
 
 def showBall():
-    ball = pygame.Rect((), (128, 128))
+    ball = pygame.Rect((0, 0), (128, 128))
 
 
 def buyDLC():
@@ -147,9 +152,9 @@ def buyDLC():
 
 
 def startGame():
+    global dlcPrice
     if dlc < 3:
         dlcPrice = 110
-        promptSize(127, 64)
     else:
         showBall()
     pass
@@ -170,7 +175,7 @@ def onClick():
             elif curse.colliderect(button3):
                 if dlc < 2:
                     dlcPrice = 50
-                    promptSize(128, 64)
+                    showPrompt = True
                 else:
                     startGame()
 
@@ -268,16 +273,16 @@ def jobOne():
 
 
 # function that multiplies the tractors on the screen if you press #	the up key
-def multiTract(a):	
-	pressed = pygame.key.get_pressed()
-	if pressed[pygame.K_UP]:
-		window.blit(tractor, rect)
-		moveXY(a,a,rect)
-	if pressed[pygame.K_DOWN]:
-		a -= 1
-	window.blit(bg, playArea)
-	window.blit(tractor, rect)
-	window.blit(hay, collect)
+def multiTract(a):
+    pressed = pygame.key.get_pressed()
+    if pressed[pygame.K_UP]:
+        window.blit(tractor, rect)
+        moveXY(a, a, rect)
+    if pressed[pygame.K_DOWN]:
+        a -= 1
+    window.blit(bg, playArea)
+    window.blit(tractor, rect)
+    window.blit(hay, collect)
 
 
 def jobTwo():
@@ -288,11 +293,11 @@ def jobTwo():
     # successfully completed the job
     if moves > 9:
         payment(2)
+        isJob = False
     # recursively calls the function
     else:
         jobTwo()
         # failure message
-
     if moves < 0:
         print("You have failed at this job, try another one")
 
@@ -301,12 +306,10 @@ def jobThree():
     col = 0
     x, y = 0, 0
     pressed = pygame.key.get_pressed()
-
     while col > 9:
         moveXY(x, y, rect)
         x += 4
         y += 4
-
         if pressed[pygame.K_UP]:
             moveXY(0, 3, collect)
         if pressed[pygame.K_DOWN]:
@@ -315,11 +318,10 @@ def jobThree():
             moveXY(-3, 0, collect)
         if pressed[pygame.K_RIGHT]:
             moveXY(3, 0, collect)
-
         if rect.colliderect(collect):
             col += 1
-
     payment(5)
+    isJob = False
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
@@ -329,7 +331,6 @@ def jobFour():
     col = 9
     x, y = 0, 0
     pressed = pygame.key.get_pressed()
-
     while col < 2:
         moveXY(x, y, rect)
         x += 4
@@ -345,12 +346,14 @@ def jobFour():
         elif rect.colliderect(collect):
             col += 1
         elif col > 15:
-            break
             print("You have failed to complete this job")
+            isJob = False
+
         else:
             col -= 1
     if col < 2:
         payment(10)
+        isJob = False
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
@@ -380,7 +383,7 @@ def jobFive():
             print("Congratulations, you passed! You still lose $5")
         else:
             print("You failed, you lose $5")
-
+    isJob = False
     payment(-5)
     window.blit(bg, playArea)
     window.blit(tractor, rect)
