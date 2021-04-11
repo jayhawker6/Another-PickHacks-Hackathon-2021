@@ -286,6 +286,7 @@ def multiTract(a):
 
 
 def jobTwo():
+    global isJob
     # control var
     moves = 1
     # multiplies the tractors on the scree
@@ -303,6 +304,7 @@ def jobTwo():
 
 
 def jobThree():
+    global isJob
     col = 0
     x, y = 0, 0
     pressed = pygame.key.get_pressed()
@@ -328,6 +330,7 @@ def jobThree():
 
 
 def jobFour():
+    global isJob
     col = 9
     x, y = 0, 0
     pressed = pygame.key.get_pressed()
@@ -360,6 +363,7 @@ def jobFour():
 
 
 def jobFive():
+    global isJob
     x, y = 0
     screenCollect = 0
     pressed = pygame.key.get_pressed()
