@@ -207,7 +207,7 @@ def onClick():
 
 #loans
 def loan(loanSize):
-    global isLoan, interest, cash
+    global isLoan, interestRate, cash
     if isLoan == True:
         print('Loan Denied')
     else:
@@ -216,14 +216,14 @@ def loan(loanSize):
         loanS = loanSize * interestRate
         isLoan = True
         print("loan Accepted")
-        interestRate = 0.1
+        interestRate = 0.25
 
 
 def interest():
     global cash, interestRate, loanS
     cash -= (loanS)
     if not (interestRate == 0):
-        interestRate += 0.01
+        interestRate += 0.10
 
 
 def posColl():
