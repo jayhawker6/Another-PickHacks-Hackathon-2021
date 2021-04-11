@@ -403,12 +403,6 @@ def workJob():
         jobOne()
     elif job == 2:
         jobTwo()
-    elif job == 3:
-        jobThree()
-    elif job == 4:
-        jobFour()
-    elif job == 5:
-        jobFive()
     else:
         quit("SOMETHING'S WRONG IN THE JOB FUNCTION STATEMENT YOU DWEEB!")
 
