@@ -45,7 +45,7 @@ collect = pygame.Rect(
     (random.randint(32, (480 - 32)), random.randint(32, (480 - 32))), (32, 32))
 rect = pygame.Rect((0, 0), (32, 32))
 bankAccount = pygame.Rect((0, 380), (32, 32))
-interest = 0.05
+interest = 0.25
 myfont = pygame.font.SysFont(None, 32)
 netWorth = myfont.render("Balance: $%s, Debt: $%s" % (cash, loanS), 1,
                          (255, 255, 0))
@@ -67,7 +67,7 @@ dlc = 0
 dlcPrice = 20
 curse = pygame.Rect((0, 0), (1, 1))
 job = 0
-
+showPrompt = False
 
 #ball_game_area = pygame.Rect(())
 def iDontEvenKnowAnyMore():
@@ -92,8 +92,8 @@ def startButton():
 def menu():
 	global prompt, promptBack, prompt1, promptButton, button1, button2, job
 	if isJob:
-	    job = 0  #random.randint(0, 5)
-	    workJob()
+		job = 0  #random.randint(0, 5)
+		workJob()
 	elif cantGiveCredit:
 		pos = ((285 - (64 / 2)), (160 - (64 / 2)))
 		prompt = pygame.image.load("./Resources/Buttons/p4.png")
@@ -102,37 +102,40 @@ def menu():
 		iDontEvenKnowAnyMore()
 		window.blit(prompt, promptBack)
 	elif dlc < 1:
-	    iDontEvenKnowAnyMore()
-	    promptSize(128, 64)
-	#prompt 1
+		iDontEvenKnowAnyMore()
+		promptSize(128, 64)
+    #prompt 1
 	elif dlc < 2:
-	    #promptSize(128, 64)
-	    iDontEvenKnowAnyMore()
-	    startButton()
-	#prompt 2
+		iDontEvenKnowAnyMore()
+		startButton()
+		if showPrompt:
+			promptSize(128, 64)
+    #prompt 2
 	elif dlc < 3:
-	    iDontEvenKnowAnyMore()
-	    startButton()
+		iDontEvenKnowAnyMore()
+		startButton()
 
-	#prompt 3
+    #prompt 3
 	elif dlc < 4:
-	    promptSize(128, 64)
-	    iDontEvenKnowAnyMore()
-	#prompt 4
+		promptSize(128, 64)
+		iDontEvenKnowAnyMore()
+    #prompt 4
 	elif dlc < 5:
-	    promptSize(128, 64)
-	    iDontEvenKnowAnyMore()
+		promptSize(128, 64)
+		iDontEvenKnowAnyMore()
 	else:
-	    #execute 'Main Game' code here
-	    pass
+		#execute 'Main Game' code here
+		pass
 
 
 def morshu():
     global cantGiveCredit
     cantGiveCredit = True
 
+
 def showBall():
-	ball = pygame.Rect((),(128, 128))
+    ball = pygame.Rect((), (128, 128))
+
 
 def buyDLC():
     global cash, dlc
@@ -142,34 +145,34 @@ def buyDLC():
     else:
         morshu()
 
+
 def startGame():
-	if dlc < 3:
-		dlcPrice = 110
-		promptSize(127,64)
-	else:
-		showBall()
-	pass
+    if dlc < 3:
+        dlcPrice = 110
+        promptSize(127, 64)
+    else:
+        showBall()
+    pass
+
 
 def onClick():
-	global curse, dlcPrice, button1, button2, button3, isJob, cantGiveCredit
-	for event in pygame.event.get():
-		if event.type == pygame.MOUSEBUTTONDOWN:
-			curse.x, curse.y = pygame.mouse.get_pos()
-			if curse.colliderect(promptButton):
-				buyDLC()
-			elif curse.colliderect(button2):
-				isJob = True
-				cantGiveCredit = False
-			elif curse.colliderect(button1):
-				loan((random.randint(1000, 100000)) / 100)
-			elif curse.colliderect(button3):
-				if dlc < 2:
-					dlcPrice = 50
-					promptSize(128,64)
-				else:
-					startGame()
-			
-				
+    global curse, dlcPrice, button1, button2, button3, isJob, cantGiveCredit
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            curse.x, curse.y = pygame.mouse.get_pos()
+            if curse.colliderect(promptButton):
+                buyDLC()
+            elif curse.colliderect(button2):
+                isJob = True
+                cantGiveCredit = False
+            elif curse.colliderect(button1):
+                loan((random.randint(1000, 100000)) / 100)
+            elif curse.colliderect(button3):
+                if dlc < 2:
+                    dlcPrice = 50
+                    promptSize(128, 64)
+                else:
+                    startGame()
 
 
 #loans
@@ -183,7 +186,7 @@ def loan(loanSize):
         loanS = loanSize * interestRate
         isLoan = True
         print("loan Accepted")
-        interestRate = 0.05
+        interestRate = 0.1
 
 
 def interest():
@@ -258,7 +261,6 @@ def jobZero():
         window.blit(hay, collect)
 
 
-
 def jobOne():
     collection = 0
     jobZero()
@@ -266,33 +268,33 @@ def jobOne():
 
 
 # function that multiplies the tractors on the screen if you press #	the up key
-def multiTract(a):
-    pressed = pygame.key.get_pressed()
-
-    if pressed[pygame.K_UP]:
-        window.blit(tractor,rect)
-    if pressed[pygame.K_DOWN]:
-        a -= 1
-    window.blit(bg, playArea)
-    window.blit(tractor, rect)
-    window.blit(hay, collect)
+def multiTract(a):	
+	pressed = pygame.key.get_pressed()
+	if pressed[pygame.K_UP]:
+		window.blit(tractor, rect)
+		moveXY(a,a,rect)
+	if pressed[pygame.K_DOWN]:
+		a -= 1
+	window.blit(bg, playArea)
+	window.blit(tractor, rect)
+	window.blit(hay, collect)
 
 
 def jobTwo():
-	# control var
-	moves = 0
-	# multiplies the tractors on the scree
-	multiTract(moves)
-	# successfully completed the job
-	if moves > 9:
-		payment(2)
-	    # recursively calls the function
-	else:
-		jobTwo()
-		# failure message
-		
-	if moves < 0:
-		print("You have failed at this job, try another one")
+    # control var
+    moves = 1
+    # multiplies the tractors on the scree
+    multiTract(moves)
+    # successfully completed the job
+    if moves > 9:
+        payment(2)
+    # recursively calls the function
+    else:
+        jobTwo()
+        # failure message
+
+    if moves < 0:
+        print("You have failed at this job, try another one")
 
 
 def jobThree():
@@ -383,7 +385,6 @@ def jobFive():
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
-
 
 
 def workJob():
