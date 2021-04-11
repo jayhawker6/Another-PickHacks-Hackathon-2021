@@ -90,45 +90,49 @@ def startButton():
 
 
 def menu():
-    global prompt, promptBack, prompt1, promptButton, button1, button2, job
-    if isJob:
-        job = 0  #random.randint(0, 5)
-        workJob()
-    elif cantGiveCredit:
-        pos = ((285 - (64 / 2)), (160 - (64 / 2)))
-        prompt = pygame.image.load("./Resources/Buttons/p4.png")
-        promptBack = pygame.Rect(pos, ((64, 64)))
-        promptButton.y = -420
-        iDontEvenKnowAnyMore()
-    elif dlc < 1:
-        iDontEvenKnowAnyMore()
-        promptSize(128, 64)
-    #prompt 1
-    elif dlc < 2:
-        #promptSize(128, 64)
-        iDontEvenKnowAnyMore()
-        startButton()
-    #prompt 2
-    elif dlc < 3:
-        promptSize(128, 64)
-        iDontEvenKnowAnyMore()
-    #prompt 3
-    elif dlc < 4:
-        promptSize(128, 64)
-        iDontEvenKnowAnyMore()
-    #prompt 4
-    elif dlc < 5:
-        promptSize(128, 64)
-        iDontEvenKnowAnyMore()
-    else:
-        #execute 'Main Game' code here
-        pass
+	global prompt, promptBack, prompt1, promptButton, button1, button2, job
+	if isJob:
+	    job = 0  #random.randint(0, 5)
+	    workJob()
+	elif cantGiveCredit:
+		pos = ((285 - (64 / 2)), (160 - (64 / 2)))
+		prompt = pygame.image.load("./Resources/Buttons/p4.png")
+		promptBack = pygame.Rect(pos, ((64, 64)))
+		promptButton.y = -420
+		iDontEvenKnowAnyMore()
+		window.blit(prompt, promptBack)
+	elif dlc < 1:
+	    iDontEvenKnowAnyMore()
+	    promptSize(128, 64)
+	#prompt 1
+	elif dlc < 2:
+	    #promptSize(128, 64)
+	    iDontEvenKnowAnyMore()
+	    startButton()
+	#prompt 2
+	elif dlc < 3:
+	    iDontEvenKnowAnyMore()
+	    startButton()
+
+	#prompt 3
+	elif dlc < 4:
+	    promptSize(128, 64)
+	    iDontEvenKnowAnyMore()
+	#prompt 4
+	elif dlc < 5:
+	    promptSize(128, 64)
+	    iDontEvenKnowAnyMore()
+	else:
+	    #execute 'Main Game' code here
+	    pass
 
 
 def morshu():
     global cantGiveCredit
     cantGiveCredit = True
 
+def showBall():
+	ball = pygame.Rect((),(128, 128))
 
 def buyDLC():
     global cash, dlc
@@ -138,19 +142,34 @@ def buyDLC():
     else:
         morshu()
 
+def startGame():
+	if dlc < 3:
+		dlcPrice = 110
+		promptSize(127,64)
+	else:
+		showBall()
+	pass
 
 def onClick():
-    global curse, button1, button2, isJob, cantGiveCredit
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            curse.x, curse.y = pygame.mouse.get_pos()
-            if curse.colliderect(promptButton):
-                buyDLC()
-            elif curse.colliderect(button2):
-                isJob = True
-                cantGiveCredit = False
-            elif curse.colliderect(button1):
-                loan((random.randint(1000, 100000)) / 100)
+	global curse, dlcPrice, button1, button2, button3, isJob, cantGiveCredit
+	for event in pygame.event.get():
+		if event.type == pygame.MOUSEBUTTONDOWN:
+			curse.x, curse.y = pygame.mouse.get_pos()
+			if curse.colliderect(promptButton):
+				buyDLC()
+			elif curse.colliderect(button2):
+				isJob = True
+				cantGiveCredit = False
+			elif curse.colliderect(button1):
+				loan((random.randint(1000, 100000)) / 100)
+			elif curse.colliderect(button3):
+				if dlc < 2:
+					dlcPrice = 50
+					promptSize(128,64)
+				else:
+					startGame()
+			
+				
 
 
 #loans
@@ -239,15 +258,15 @@ def jobZero():
         window.blit(hay, collect)
 
 
-'''
+
 def jobOne():
     collection = 0
     jobZero()
     payment(10)
 
 
-# function that draws a circle if you press the up key
-def drawCirc(a):
+# function that multiplies the tractors on the screen if you press #	the up key
+def multiTract(a):
     pressed = pygame.key.get_pressed()
 
     if pressed[pygame.K_UP]:
@@ -260,19 +279,19 @@ def drawCirc(a):
 
 
 def jobTwo():
-    # control var
-    moves = 0
-    # draw circle function
-    drawCirc(moves)
-    # successfully completed the job
+	# control var
+	moves = 0
+	# multiplies the tractors on the scree
+	multiTract(moves)
+	# successfully completed the job
 	if moves > 9:
 		payment(2)
-        # recursively calls the function
+	    # recursively calls the function
 	else:
 		jobTwo()
 		# failure message
 		
-		if moves < 0:
+	if moves < 0:
 		print("You have failed at this job, try another one")
 
 
@@ -364,7 +383,7 @@ def jobFive():
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
-'''
+
 
 
 def workJob():
@@ -373,15 +392,15 @@ def workJob():
     if job == 0:
         jobZero()
     elif job == 1:
-        pass
+        jobOne()
     elif job == 2:
-        pass
+        jobTwo()
     elif job == 3:
-        pass
+        jobThree()
     elif job == 4:
-        pass
+        jobFour()
     elif job == 5:
-        pass
+        jobFive()
     else:
         quit("SOMETHING'S WRONG IN THE JOB FUNCTION STATEMENT YOU DWEEB!")
 
