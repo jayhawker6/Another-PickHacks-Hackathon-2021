@@ -59,8 +59,10 @@ promptBack = pygame.Rect((0, 0), (64, 32))
 # GAME PROGRESS #
 button1 = pygame.Rect(((winx - 66), 20), (62, 20))
 button2 = pygame.Rect(((winx - 50), 50), (46, 20))
+button3 = pygame.Rect(((winx - 66), 20), (0, 0))
 img1 = pygame.image.load("./Resources/Buttons/b1.png")
 img2 = pygame.image.load("./Resources/Buttons/b3.png")
+img3 = pygame.image.load("./Resources/Buttons/b2.png")
 dlc = 0
 dlcPrice = 20
 curse = pygame.Rect((0, 0), (1, 1))
@@ -69,24 +71,26 @@ job = 0
 
 #ball_game_area = pygame.Rect(())
 def iDontEvenKnowAnyMore():
-	window.fill((0, 0, 0))
-	gameWin = pygame.Rect((0, 0), (569, 320))
-	button1 = pygame.Rect(((winx - 66), 20), (62, 20))
-	button2 = pygame.Rect(((winx - 50), 50), (46, 20))
-	netWorth = myfont.render(
-	    """Balance: $%s, Debt: $%s, Exposure Doesn't Matter.""" %
-	    (cash, loanS), 1, (255, 255, 0))
-	window.blit(image, gameWin)
-	window.blit(prompt, promptBack)
-	window.blit(prompt1, promptButton)
-	window.blit(img1, button1)
-	window.blit(img2, button2)
-	window.blit(netWorth, bankAccount)
+    window.fill((0, 0, 0))
+    gameWin = pygame.Rect((0, 0), (569, 320))
+    button1 = pygame.Rect(((winx - 66), 20), (62, 20))
+    button2 = pygame.Rect(((winx - 50), 50), (46, 20))
+    netWorth = myfont.render("""Balance: $%s, Debt: $%s""" % (cash, loanS), 1,
+                             (255, 255, 0))
+    window.blit(image, gameWin)
+    window.blit(img1, button1)
+    window.blit(img2, button2)
+    window.blit(netWorth, bankAccount)
+
+
+def startButton():
+    pos = ((285 - (64 / 2)), (160 - (20 / 2)))
+    button3 = pygame.Rect(pos, (62, 20))
+    window.blit(img3, button3)
 
 
 def menu():
     global prompt, promptBack, prompt1, promptButton, button1, button2, job
-
     if isJob:
         job = 0  #random.randint(0, 5)
         workJob()
@@ -97,14 +101,14 @@ def menu():
         promptButton.y = -420
         iDontEvenKnowAnyMore()
     elif dlc < 1:
-		
-        promptSize(128, 64)
         iDontEvenKnowAnyMore()
-        #prompt 1
+        promptSize(128, 64)
+    #prompt 1
     elif dlc < 2:
-        promptSize(128, 64)
+        #promptSize(128, 64)
         iDontEvenKnowAnyMore()
-        #prompt 2
+        startButton()
+    #prompt 2
     elif dlc < 3:
         promptSize(128, 64)
         iDontEvenKnowAnyMore()
@@ -212,27 +216,27 @@ def payment(pay):
 
 
 def jobZero():
-	global isJob, collection
-	for event in pygame.event.get():
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_w:
-			    moveXY(0, -3, rect)
-			elif event.key == pygame.K_s:
-			    moveXY(0, 3, rect)
-			elif event.key == pygame.K_a:
-			    moveXY(-3, 0, rect)
-			elif event.key == pygame.K_d:
-			    moveXY(3, 0, rect)
-		if rect.colliderect(collect):
-		    posColl()
-		    print(collection)
-		if collection > 9:
-			payment(10)
-			collection = 0
-			isJob = False
-		window.blit(bg, playArea)
-		window.blit(tractor, rect)
-		window.blit(hay, collect)
+    global isJob, collection
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                moveXY(0, -3, rect)
+            elif event.key == pygame.K_s:
+                moveXY(0, 3, rect)
+            elif event.key == pygame.K_a:
+                moveXY(-3, 0, rect)
+            elif event.key == pygame.K_d:
+                moveXY(3, 0, rect)
+        if rect.colliderect(collect):
+            posColl()
+            print(collection)
+        if collection > 9:
+            payment(10)
+            collection = 0
+            isJob = False
+        window.blit(bg, playArea)
+        window.blit(tractor, rect)
+        window.blit(hay, collect)
 
 
 '''
@@ -400,6 +404,8 @@ def promptSize(width, height):
     promptBack = pygame.Rect(pos, ((width, height)))
     prompt1 = pygame.image.load("./Resources/Buttons/p2.png")
     promptButton = pygame.Rect((posB), ((width, height)))
+    window.blit(prompt, promptBack)
+    window.blit(prompt1, promptButton)
 
 
 #prompt 5
