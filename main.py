@@ -21,36 +21,132 @@ winfill = pygame.image.load("./Resources/Assets/field.png")
 image = pygame.Surface((569, 320))
 image.fill((255, 255, 100))
 
+cantGiveCredit = False
 pygame.init()
-
+pygame.mixer.init()
+pygame.font.init()
 ###START HERE###
 promptBack = pygame.Rect((0, 0), (0, 0))
 prompt = pygame.image.load("./Resources/Assets/Tractor.png")
 prompt1 = pygame.image.load("./Resources/Buttons/p3.png")
-promptButton = pygame.Rect((0,0), (0,0))
+promptButton = pygame.Rect((0, 0), (0, 0))
 #window where the game occurs
+# should we make window size smaller, the loan and job buttons are
+# barely visible
 winSize = winx, winy = 640, 480
 window = pygame.display.set_mode((winSize))
 tractor = pygame.image.load("./Resources/Assets/Tractor.png")
 hay = pygame.image.load("./Resources/Assets/hay.png")
 # CASH MANAGMENT #
-loanSize = random.random()
+loanS = 0
 cash = 0.00
 playArea = pygame.Rect((0, 0), (winSize))
 collect = pygame.Rect(
-    (random.randint(32, (winx - 32)), random.randint(32,
-                                                     (winx - 32))), (32, 32))
+    (random.randint(32, (480 - 32)), random.randint(32, (480 - 32))), (32, 32))
 rect = pygame.Rect((0, 0), (32, 32))
+bankAccount = pygame.Rect((0, 380), (32, 32))
+interest = 0.05
+myfont = pygame.font.SysFont(None, 32)
+netWorth = myfont.render("Balance: $%s, Debt: $%s" % (cash, loanS), 1,
+                         (255, 255, 0))
 isLoan = False
+isJob = False
 collection = 0
 interestRate = 0.00
 selected = 0
+screenCollect = 0
 promptBack = pygame.Rect((0, 0), (64, 32))
 # GAME PROGRESS #
-
+button1 = pygame.Rect(((winx - 66), 20), (62, 20))
+button2 = pygame.Rect(((winx - 50), 50), (46, 20))
 img1 = pygame.image.load("./Resources/Buttons/b1.png")
 img2 = pygame.image.load("./Resources/Buttons/b3.png")
 dlc = 0
+dlcPrice = 20
+curse = pygame.Rect((0, 0), (1, 1))
+job = 0
+
+
+#ball_game_area = pygame.Rect(())
+def iDontEvenKnowAnyMore():
+	window.fill((0, 0, 0))
+	gameWin = pygame.Rect((0, 0), (569, 320))
+	button1 = pygame.Rect(((winx - 66), 20), (62, 20))
+	button2 = pygame.Rect(((winx - 50), 50), (46, 20))
+	netWorth = myfont.render(
+	    """Balance: $%s, Debt: $%s, Exposure Doesn't Matter.""" %
+	    (cash, loanS), 1, (255, 255, 0))
+	window.blit(image, gameWin)
+	window.blit(prompt, promptBack)
+	window.blit(prompt1, promptButton)
+	window.blit(img1, button1)
+	window.blit(img2, button2)
+	window.blit(netWorth, bankAccount)
+
+
+def menu():
+    global prompt, promptBack, prompt1, promptButton, button1, button2, job
+
+    if isJob:
+        job = 0  #random.randint(0, 5)
+        workJob()
+    elif cantGiveCredit:
+        pos = ((285 - (64 / 2)), (160 - (64 / 2)))
+        prompt = pygame.image.load("./Resources/Buttons/p4.png")
+        promptBack = pygame.Rect(pos, ((64, 64)))
+        promptButton.y = -420
+        iDontEvenKnowAnyMore()
+    elif dlc < 1:
+		
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+        #prompt 1
+    elif dlc < 2:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+        #prompt 2
+    elif dlc < 3:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+    #prompt 3
+    elif dlc < 4:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+    #prompt 4
+    elif dlc < 5:
+        promptSize(128, 64)
+        iDontEvenKnowAnyMore()
+    else:
+        #execute 'Main Game' code here
+        pass
+
+
+def morshu():
+    global cantGiveCredit
+    cantGiveCredit = True
+
+
+def buyDLC():
+    global cash, dlc
+    if dlcPrice <= cash:
+        cash -= dlcPrice
+        dlc += 1
+    else:
+        morshu()
+
+
+def onClick():
+    global curse, button1, button2, isJob, cantGiveCredit
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            curse.x, curse.y = pygame.mouse.get_pos()
+            if curse.colliderect(promptButton):
+                buyDLC()
+            elif curse.colliderect(button2):
+                isJob = True
+                cantGiveCredit = False
+            elif curse.colliderect(button1):
+                loan((random.randint(1000, 100000)) / 100)
 
 
 #loans
@@ -59,65 +155,55 @@ def loan(loanSize):
     if isLoan == True:
         print('Loan Denied')
     else:
-        global cash, interestRate
-        cash += loan
+        global cash, interestRate, loanS
+        cash += loanSize
+        loanS = loanSize * interestRate
         isLoan = True
-        interest = 0.05
+        print("loan Accepted")
+        interestRate = 0.05
 
 
 def interest():
-    global cash, interestRate
-    cash -= (loanSize * interestRate)
+    global cash, interestRate, loanS
+    cash -= (loanS)
     if not (interestRate == 0):
         interestRate += 0.01
 
 
 def posColl():
     global collection
-    collect.left = random.randint(0, (winx - 32))
-    collect.top = random.randint(0, (winy - 32))
+    collect.left = random.randint(0, (480 - 32))
+    collect.top = random.randint(0, (480 - 32))
     collection += 1
-    if collect.top > winy - collect.height:
-        collect.top = winy - collect.height
+    if collect.top > 480 - collect.height:
+        collect.top = 480 - collect.height
     if collect.top < 0:
         collect.top = 0
-    if collect.left > winx - collect.width:
-        collect.left = winx - collect.width
+    if collect.left > 480 - collect.width:
+        collect.left = 480 - collect.width
     if collect.left < 0:
         collect.left = 0
     print(collect.top)
     print(collect.left)
 
 
-def moveXY(xDirect, yDirect):
+def moveXY(xDirect, yDirect, hitBox):
+    global screenCollect
     for x in range(0, 10):
-        rect.move_ip(xDirect, yDirect)
+        hitBox.move_ip(xDirect, yDirect)
         pygame.time.wait(1)
-    if rect.top > winy - rect.height:
-        rect.top = winy - rect.height
-    if rect.top < 0:
-        rect.top = 0
-    if rect.left > winx - rect.width:
-        rect.left = winx - rect.width
-    if rect.left < 0:
-        rect.left = 0
-
-
-'''
-def moveCollect(xDir, yDir):
-    for x in range(0, 10):
-        collect.move_ip(xDir, yDir)
-        pygame.time.wait(1)
-    if collect.top > winy - rect.height:
-        collect.top = winy - rect.height
-    if collect.top < 0:
-        collect.top = 0
-    if collect.left > winx - rect.width:
-        collect.left = winx - rect.width
-    if collect.left < 0:
-        collect.left = 0
-
-'''
+    if hitBox.top > 480 - hitBox.height:
+        hitBox.top = 480 - hitBox.height
+        screenCollect += 1
+    if hitBox.top < 0:
+        hitBox.top = 0
+        screenCollect += 1
+    if hitBox.left > 480 - hitBox.width:
+        hitBox.left = 480 - hitBox.width
+        screenCollect += 1
+    if hitBox.left < 0:
+        hitBox.left = 0
+        screenCollect += 1
 
 
 def payment(pay):
@@ -126,40 +212,42 @@ def payment(pay):
 
 
 def jobZero():
+	global isJob, collection
+	for event in pygame.event.get():
+		if event.type == pygame.KEYDOWN:
+			if event.key == pygame.K_w:
+			    moveXY(0, -3, rect)
+			elif event.key == pygame.K_s:
+			    moveXY(0, 3, rect)
+			elif event.key == pygame.K_a:
+			    moveXY(-3, 0, rect)
+			elif event.key == pygame.K_d:
+			    moveXY(3, 0, rect)
+		if rect.colliderect(collect):
+		    posColl()
+		    print(collection)
+		if collection > 9:
+			payment(10)
+			collection = 0
+			isJob = False
+		window.blit(bg, playArea)
+		window.blit(tractor, rect)
+		window.blit(hay, collect)
 
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                moveXY(0, -3)
-            elif event.key == pygame.K_s:
-                moveXY(0, 3)
-            elif event.key == pygame.K_a:
-                moveXY(-3, 0)
-            elif event.key == pygame.K_d:
-                moveXY(3, 0)
-        if rect.colliderect(collect):
-            posColl()
-            print(collection)
-        if collection > 9:
-            break
 
-        window.blit(bg, playArea)
-        window.blit(tractor, rect)
-        window.blit(hay, collect)
-
-
+'''
 def jobOne():
     collection = 0
     jobZero()
     payment(10)
 
 
+# function that draws a circle if you press the up key
 def drawCirc(a):
     pressed = pygame.key.get_pressed()
 
     if pressed[pygame.K_UP]:
-        pygame.draw.circle(20, 220, 15 + a, 30, 30, 30)
-        a += 1
+        window.blit(tractor,rect)
     if pressed[pygame.K_DOWN]:
         a -= 1
     window.blit(bg, playArea)
@@ -168,44 +256,45 @@ def drawCirc(a):
 
 
 def jobTwo():
+    # control var
     moves = 0
+    # draw circle function
     drawCirc(moves)
-    if moves > 9:
-        payment(5)
-    else:
-        jobTwo()
+    # successfully completed the job
+	if moves > 9:
+		payment(2)
+        # recursively calls the function
+	else:
+		jobTwo()
+		# failure message
+		
+		if moves < 0:
+		print("You have failed at this job, try another one")
 
-    if moves < 0:
-        print("You have failed at this job, try another one")
-        return False
-
-
-''''
 
 def jobThree():
     col = 0
-    x, y = 0,0
+    x, y = 0, 0
     pressed = pygame.key.get_pressed()
-    
+
     while col > 9:
-        moveXY(x,y)
-        x +=cursor.top
-        y +=cursor.bottom
+        moveXY(x, y, rect)
+        x += 4
+        y += 4
 
         if pressed[pygame.K_UP]:
-            moveCollect(0,3)
+            moveXY(0, 3, collect)
         if pressed[pygame.K_DOWN]:
-            moveCollect(0,-3)
+            moveXY(0, -3, collect)
         if pressed[pygame.K_LEFT]:
-            moveCollect(-3,0)
+            moveXY(-3, 0, collect)
         if pressed[pygame.K_RIGHT]:
-            moveCollect(3,0)
+            moveXY(3, 0, collect)
 
         if rect.colliderect(collect):
-            postColl()
-            col +=1
+            col += 1
 
-    pay(5)    
+    payment(5)
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
@@ -213,72 +302,70 @@ def jobThree():
 
 def jobFour():
     col = 9
-    x, y = 0,0
+    x, y = 0, 0
     pressed = pygame.key.get_pressed()
-    
+
     while col < 2:
-        moveXY(x,y)
-        x +=cursor.top
-        y +=cursor.bottom
-
+        moveXY(x, y, rect)
+        x += 4
+        y += 4
         if pressed[pygame.K_UP]:
-            moveCollect(0,3)
-        if pressed[pygame.K_DOWN]:
-            moveCollect(0,-3)
-        if pressed[pygame.K_LEFT]:
-            moveCollect(-3,0)
-        if pressed[pygame.K_RIGHT]:
-            moveCollect(3,0)
-
-        if rect.colliderect(collect):
-            postColl()
-            col +=1
+            moveXY(0, 3, collect)
+        elif pressed[pygame.K_DOWN]:
+            moveXY(0, -3, collect)
+        elif pressed[pygame.K_LEFT]:
+            moveXY(-3, 0, collect)
+        elif pressed[pygame.K_RIGHT]:
+            moveXY(3, 0, collect)
+        elif rect.colliderect(collect):
+            col += 1
+        elif col > 15:
+            break
+            print("You have failed to complete this job")
         else:
-            col -=1
-
-		if col > 15:
-			break
-			print("You have failed to complete this job")
-		
-    pay(10)    
+            col -= 1
+    if col < 2:
+        payment(10)
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
+
 
 def jobFive():
-    col = 0
-    x, y = 0,0
+    x, y = 0
+    screenCollect = 0
     pressed = pygame.key.get_pressed()
-    
-    while col < 9:
-        moveXY(x,y)
-        x +=cursor.top
-        y +=cursor.bottom
-
+    while screenCollect < 20:
+        moveXY(x, y, rect)
+        x += 4
+        y += 4
         if pressed[pygame.K_UP]:
-            moveCollect(0,3)
-        if pressed[pygame.K_DOWN]:
-            moveCollect(0,-3)
-        if pressed[pygame.K_LEFT]:
-            moveCollect(-3,0)
-        if pressed[pygame.K_RIGHT]:
-            moveCollect(3,0)
+            moveXY(0, 3)
+        elif pressed[pygame.K_DOWN]:
+            moveXY(0, -3)
+        elif pressed[pygame.K_LEFT]:
+            moveXY(-3, 0)
+        elif pressed[pygame.K_RIGHT]:
+            moveXY(3, 0)
+        elif rect.colliderect(collect):
+            screenCollect -= 1
+        else:
+            screenCollect += 1
+        if screenCollect == 20:
+            print("Congratulations, you passed! You still lose $5")
+        else:
+            print("You failed, you lose $5")
 
-        if rect.colliderect(collect):
-            postColl()
-            col +=1
-
-    pay(10)    
+    payment(-5)
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
-
 '''
 
 
 def workJob():
+    global job
     interest()
-    job = 0  #random.randint(0, 5)
     if job == 0:
         jobZero()
     elif job == 1:
@@ -296,6 +383,7 @@ def workJob():
 
 
 #function that allows you to start the game
+#Delete Mabye
 def buyGame():
     if not (dlc > 0):
         pygame.draw.rect(window, (255, 255, 100), (100, 100, 25, 15))
@@ -307,40 +395,11 @@ def buyGame():
 def promptSize(width, height):
     global prompt, promptBack, prompt1, promptButton
     pos = ((285 - (width / 2)), (160 - (height / 2)))
-    posB = ((285-(78 / 2)), (160-(height - 40) / 2) + )
+    posB = ((285 - (78 / 2)), (160 - (height - 40) / 2) + 16)
     prompt = pygame.image.load("./Resources/Buttons/p3.png")
     promptBack = pygame.Rect(pos, ((width, height)))
     prompt1 = pygame.image.load("./Resources/Buttons/p2.png")
     promptButton = pygame.Rect((posB), ((width, height)))
-
-
-def menu():
-	global prompt, promptBack, prompt1, promptButton 
-	gameWin = pygame.Rect((0, 0), (569, 320))
-	if dlc < 1:
-	    promptSize(128, 64)	
-	#prompt 1
-	elif dlc < 2:
-	    promptSize(2, 2, "./Resources/Buttons/p2.png")
-	#prompt 2
-	elif dlc < 3:
-	    promptSize(2, 2, "./Resources/Buttons/p3.png")
-	#prompt 3
-	elif dlc < 4:
-	    promptSize(2, 2, "./Resources/Buttons/p4.png")
-	#prompt 4
-	elif dlc < 5:
-	    promptSize(2, 2, "./Resources/Buttons/p5.png")
-	else:
-	    #execute 'Main Game' code here
-	    pass
-	button1 = pygame.Rect(((winx - 66), 20), (62, 20))	
-	button2 = pygame.Rect(((winx - 50), 50), (46, 20))
-	window.blit(image, gameWin)
-	window.blit(prompt, promptBack)
-	window.blit(prompt1, promptButton)
-	window.blit(img1, button1)
-	window.blit(img2, button2)
 
 
 #prompt 5
@@ -361,6 +420,8 @@ def selection():
 #loops through the game
 while True:
     menu()
+    # pygame.mixer.Sound.play(pygame.mixer.Sound("./Resources/Sounds/WindowXPError.ogg"))
+    onClick()
     #workJob()
     #buyGame()
     pygame.display.update()
