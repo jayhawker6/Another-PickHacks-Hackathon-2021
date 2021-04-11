@@ -38,8 +38,8 @@ window = pygame.display.set_mode((winSize))
 tractor = pygame.image.load("./Resources/Assets/Tractor.png")
 hay = pygame.image.load("./Resources/Assets/hay.png")
 # CASH MANAGMENT #
-loanS = 0
-cash = 1000000000.00
+loanS = 0.00
+cash = 0.00
 playArea = pygame.Rect((0, 0), (winSize))
 collect = pygame.Rect(
     (random.randint(32, (480 - 32)), random.randint(32, (480 - 32))), (32, 32))
@@ -301,7 +301,7 @@ def jobTwo():
         # failure message
     if moves < 0:
         print("You have failed at this job, try another one")
-
+'''
 
 def jobThree():
     global isJob
@@ -392,7 +392,7 @@ def jobFive():
     window.blit(bg, playArea)
     window.blit(tractor, rect)
     window.blit(hay, collect)
-
+'''
 
 def workJob():
     global job
