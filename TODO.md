@@ -1,7 +1,7 @@
 # TODO:
 ## Major:
-- Fix rect errors
-- Fix indent hell
+- ~~Fix rect errors~~
+- ~~Fix indent hell~~
 ## Minor:
-- Add Jobs
+- ~~Add Jobs~~
 - ~~End the misery~~
