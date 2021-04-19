@@ -17,7 +17,7 @@ import random
 # Pygame Paramaters #
 bg = pygame.image.load("./Resources/Assets/field.png")
 winfill = pygame.image.load("./Resources/Assets/field.png")
-image = pygame.image.load("./Resources/Assets/CircBorder.png")
+# image = pygame.image.load("./Resources/Assets/CircBorder.png")
 
 cantGiveCredit = False
 pygame.init()
@@ -66,7 +66,7 @@ img1 = pygame.image.load("./Resources/Buttons/b1.png")
 img2 = pygame.image.load("./Resources/Buttons/b3.png")
 img3 = pygame.image.load("./Resources/Buttons/b2.png")
 img4 = pygame.image.load("./Resources/Buttons/p5.png")
-img5 = pygame.image.load("./Resources/Buttons/p6.png")
+# img5 = pygame.image.load("./Resources/Buttons/p6.png")
 dlc = 0
 dlcPrice = 20
 curse = pygame.Rect((0, 0), (1, 1))
@@ -83,7 +83,7 @@ def iDontEvenKnowAnyMore():
     netWorth = myfont.render(
         """Balance: $%s, Debt: $%s, DLC: #%s %s""" %
         (cash, loanS, dlc, showPrompt), 1, (255, 255, 0))
-    window.blit(image, gameWin)
+    #window.blit(image, gameWin)
     window.blit(img1, button1)
     window.blit(img2, button2)
     window.blit(netWorth, bankAccount)
